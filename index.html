@@ -48,10 +48,12 @@ const add_message = (message) => {
 };
 
 const run = () => {
-  var timer_val = parseInt(el_timer.value);
-  var min_val = 60000;
-  if (timer_val < 1) timer_val = 1;
-  if (timer_val <= 5) min_val = timer_val * 1000;
+  const timer_val = Math.max(parseInt(el_timer.value), 1);
+  if (!timer_val){
+    add_message("Error: Timer value not valid");
+    return;
+  }
+  const min_val = Math.min(timer_val * 1000, 60000);
   const next = getRandomInt(timer_val * 60000 - min_val) + min_val;
   ring.play();
   add_message(tasks[getRandomInt(tasks.length)]);
