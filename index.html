@@ -9,7 +9,8 @@
   <style>
     #main {
       max-width: 900px;
-      margin: 24px auto;
+      margin: 0 auto;
+      padding: 2em 1em;
     }
     #timer {
       width: 4em;
@@ -19,7 +20,7 @@
 
 <body>
 <div id="main">
-  <textarea placeholder="Tasks" id="tasks" rows="6"></textarea>
+  <textarea placeholder="Tasks" id="tasks" rows="8"></textarea>
   <label><input type="number" id="timer" value="20" step="5" min="5" max="95" style="width: 4em;" required /> min &nbsp;</label>
   <button id="run">Start</button>
   <button id="clear" class="success">Clear</button>
