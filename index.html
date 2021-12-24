@@ -58,7 +58,7 @@ const run = () => {
   if (task_set_val){
     if (task.startsWith("=")) timer_val = task_set_val;
     if (task.startsWith("+")) timer_val += task_set_val;
-    if (task.startsWith("-") && timer_val + task_set_val > 0) timer_val += task_set_val;
+    if (task.startsWith("-") && timer_val - task_set_val > 0) timer_val -= task_set_val;
   }
   timer_val = Math.max(timer_val, 1);
   const min_val = Math.min(timer_val * 1000, 60000);
