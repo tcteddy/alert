@@ -53,10 +53,18 @@ const run = () => {
     add_message("Error: Timer value not valid");
     return;
   }
+  const task = tasks[getRandomInt(tasks.length)];
+  const task_set_val = parseInt(task);
+  if (task_set_val){
+    if (task.startsWith("=")) timer_val = task_set_val;
+    if (task.startsWith("+")) timer_val += task_set_val;
+    if (task.startsWith("-")) timer_val = Math.max(timer_val + task_set_val, 5);
+  }
   const min_val = Math.min(timer_val * 1000, 60000);
   const next = getRandomInt(timer_val * 60000 - min_val) + min_val;
   ring.play();
-  add_message(tasks[getRandomInt(tasks.length)]);
+  el_timer.value = timer_val;
+  add_message(task);
   timeout_id = setTimeout(run, next);
 };
 
