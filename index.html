@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alert!</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    #main {
+      max-width: 900px;
+      margin: 24px auto;
+    }
+    #timer {
+      width: 4em;
+    }
+  </style>
+</head>
+
+<body>
+<div id="main">
+  <textarea placeholder="Tasks" id="tasks" rows="6"></textarea>
+  <label><input type="number" id="timer" value="20" step="5" min="5" max="95" style="width: 4em;" required /> min &nbsp;</label>
+  <button id="run">Start</button>
+  <button id="clear" class="success">Clear</button>
+  <p id="task"></p>
+</div>
+
+<script>
+const el_run = document.getElementById("run");
+const el_clear = document.getElementById("clear");
+const el_timer = document.getElementById("timer");
+const el_tasks = document.getElementById("tasks");
+const el_task = document.getElementById("task");
+
+const ring = new Audio("static/ring.ogg");
+var timeout_id, tasks;
+
+const getRandomInt = (max) => {
+  return Math.floor(Math.random() * max);
+};
+
+const add_message = (message) => {
+  const now = new Date();
+  const text = "[" + now.toLocaleTimeString('en-US') + "] " + message + "<br>";
+  el_task.innerHTML = text + el_task.innerHTML;
+};
+
+const run = () => {
+  var timer_val = parseInt(el_timer.value);
+  var min_val = 60000;
+  if (timer_val <= 1){
+    timer_val = 1;
+    min_val = 1000;
+  }
+  else if (timer_val < 5){
+    min_val = 10000;
+  }
+  const next = getRandomInt(timer_val * 60000 - min_val) + min_val;
+  ring.play();
+  add_message(tasks[getRandomInt(tasks.length)]);
+  timeout_id = setTimeout(run, next);
+};
+
+el_run.addEventListener("click", () => {
+  if (el_run.classList.contains("error")){
+    el_tasks.disabled = false;
+    el_run.classList.remove("error");
+    el_run.textContent = "Start";
+    clearTimeout(timeout_id);
+  }
+  else{   
+    tasks = el_tasks.value.split("\n").filter(t => t.trim());
+    if (tasks.length == 0){
+      add_message("Error: No task available");
+      return;
+    }
+    el_tasks.disabled = true;
+    el_run.classList.add("error");
+    el_run.textContent = "Stop";
+    run();
+  }
+});
+
+el_clear.addEventListener("click", () => {
+  el_task.innerHTML = "";
+});
+</script>
+
+</body>
+</html>
+
+
