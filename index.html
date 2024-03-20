@@ -88,8 +88,8 @@ const run = () => {
   ring.play();
   add_message(task);
   current_wait = 0;
-  var rest_time = Math.max(parseInt(el_rest.value) || 0, 0);
-  el_rest.value = timer_val;
+  const rest_time = Math.max(parseInt(el_rest.value) || 0, 0);
+  el_rest.value = rest_time;
   if (rest_time > 0) timeout_id = setTimeout(rest_up, rest_time * 1000);
   else timeout_id = setTimeout(roll, time_unit);
 };
