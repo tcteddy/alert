@@ -21,9 +21,10 @@
 <body>
 <div id="main">
   <textarea placeholder="Tasks" id="tasks" rows="8"></textarea>
-  <label><input type="number" id="timer" value="20" step="5" min="5" max="95" style="width: 4em;" required /> min&nbsp;</label>
+  <label><input type="number" id="timer" value="10" step="1" min="1" max="999" style="width: 4em;" required />&nbsp;min&nbsp;</label>
   <button id="run">Start</button>
   <button id="clear" class="success">Clear</button>
+  <label><input type="number" id="rest" value="60" step="1" min="1" max="999" style="width: 4em;" required />&nbsp;sec</label>
   <p id="task"></p>
 </div>
 
@@ -31,11 +32,16 @@
 const el_run = document.getElementById("run");
 const el_clear = document.getElementById("clear");
 const el_timer = document.getElementById("timer");
+const el_rest = document.getElementById("rest");
 const el_tasks = document.getElementById("tasks");
 const el_task = document.getElementById("task");
 
 const ring = new Audio("8_whistle_blow_long.mp3");
-var timeout_id, tasks;
+const ring2 = new Audio("ring.ogg");
+const time_unit = 12000;
+const minute = 60000 / time_unit;
+
+var timeout_id, tasks, current_wait = 0;
 
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
@@ -47,12 +53,25 @@ const add_message = (message) => {
   el_task.innerHTML = text + el_task.innerHTML;
 };
 
-const run = () => {
-  var timer_val = parseInt(el_timer.value);
-  if (Number.isNaN(timer_val)){
-    add_message("Error: Timer value not valid");
+const rest_up = () => {
+  ring2.play();
+  timeout_id = setTimeout(roll, time_unit);
+}
+
+const roll = () => {
+  var timer_val = Math.max(parseInt(el_timer.value) || 1, 1);
+  el_timer.value = timer_val;
+  timer_val *= minute;
+  if (Math.random() * timer_val < Math.max(current_wait - timer_val * 2, 1)){
+    run();
     return;
   }
+  current_wait += 1;
+  timeout_id = setTimeout(roll, time_unit);
+}
+
+const run = () => {
+  var timer_val = (parseInt(el_timer.value) || 1);
   const task = tasks[getRandomInt(tasks.length)];
   const task_set_val = parseInt(task.slice(1));
   if (task_set_val){
@@ -65,11 +84,14 @@ const run = () => {
     timer_val = getRandomInt(timer_val);
   }
   timer_val = Math.max(timer_val, 1);
-  const next = (getRandomInt(timer_val * 60 - 5) + 5) * 1000;
-  ring.play();
   el_timer.value = timer_val;
+  ring.play();
   add_message(task);
-  timeout_id = setTimeout(run, next);
+  current_wait = 0;
+  var rest_time = Math.max(parseInt(el_rest.value) || 0, 0);
+  el_rest.value = timer_val;
+  if (rest_time > 0) timeout_id = setTimeout(rest_up, rest_time * 1000);
+  else timeout_id = setTimeout(roll, time_unit);
 };
 
 el_run.addEventListener("click", () => {
@@ -81,23 +103,19 @@ el_run.addEventListener("click", () => {
   }
   else{   
     tasks = el_tasks.value.split("\n").map(t => t.trim()).filter(t => t);
-    if (tasks.length == 0){
-      add_message("Error: No task available");
-      return;
-    }
+    if (tasks.length == 0) tasks = ["Time's up!"];
     el_tasks.disabled = true;
     el_run.classList.add("error");
     el_run.textContent = "Stop";
-    run();
+    roll();
   }
 });
 
 el_clear.addEventListener("click", () => {
   el_task.innerHTML = "";
+  current_wait = 0;
 });
 </script>
 
 </body>
 </html>
-
-
