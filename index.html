@@ -38,7 +38,7 @@ const el_task = document.getElementById("task");
 
 const ring = new Audio("8_whistle_blow_long.mp3");
 const ring2 = new Audio("ring.ogg");
-const time_unit = 12000;
+const time_unit = 6000;
 const minute = 60000 / time_unit;
 
 var timeout_id, tasks, current_wait = 0;
@@ -62,7 +62,7 @@ const roll = () => {
   var timer_val = Math.max(parseInt(el_timer.value) || 1, 1);
   el_timer.value = timer_val;
   timer_val *= minute;
-  if (Math.random() * timer_val < Math.max(current_wait - timer_val * 2, 1)){
+  if (Math.random() * (timer_val - current_wait) < 1){
     run();
     return;
   }
