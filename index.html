@@ -41,7 +41,7 @@ const ring2 = new Audio("ring.ogg");
 const time_unit = 2000;
 const minute = 60000 / time_unit;
 
-var timeout_id, tasks, total_time, current_wait;
+var timeout_id, tasks, total_time, current_wait = 0;
 
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
