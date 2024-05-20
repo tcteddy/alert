@@ -41,7 +41,7 @@ const ring2 = new Audio("ring.ogg");
 const time_unit = 2000;
 const minute = 60000 / time_unit;
 
-var timeout_id, tasks, remaining_wait;
+var timeout_id, tasks, total_time, current_wait;
 
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
@@ -61,16 +61,15 @@ const rest_up = () => {
 const parse_timer = () => {
   var timer_val = Math.max(parseInt(el_timer.value) || 1, 1);
   el_timer.value = timer_val;
-  remaining_wait = timer_val * minute;
+  total_time = timer_val * minute;
   return timer_val;
 };
 
 const roll = () => {
-  remaining_wait -= 1;
-  if (Math.random() * remaining_wait < 1){
-    clearInterval(timeout_id);
-    run();
-  }
+  current_wait += 1;
+  if (Math.random() * (total_time - current_wait) > 1) return;
+  clearInterval(timeout_id);
+  run();
 };
 
 const run = () => {
@@ -88,6 +87,7 @@ const run = () => {
   }
   el_timer.value = timer_val;
   parse_timer();
+  current_wait = 0;
   ring.play();
   add_message(task);
   const rest_time = Math.max(parseInt(el_rest.value) || 0, 0);
@@ -117,6 +117,7 @@ el_run.addEventListener("click", () => {
 el_clear.addEventListener("click", () => {
   el_task.innerHTML = "";
   parse_timer();
+  current_wait = 0;
 });
 </script>
 
