@@ -41,7 +41,7 @@ const ring2 = new Audio("ring.ogg");
 const time_unit = 2000;
 const minute = 60000 / time_unit;
 
-var timeout_id, tasks, remaining_wait = 0;
+var timeout_id, tasks, remaining_wait;
 
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
@@ -109,13 +109,14 @@ el_run.addEventListener("click", () => {
     el_tasks.disabled = true;
     el_run.classList.add("error");
     el_run.textContent = "Stop";
+    parse_timer();
     setInterval(roll, time_unit);
   }
 });
 
 el_clear.addEventListener("click", () => {
   el_task.innerHTML = "";
-  current_wait = 0;
+  parse_timer();
 });
 </script>
 
