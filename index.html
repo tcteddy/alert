@@ -110,7 +110,7 @@ el_run.addEventListener("click", () => {
     el_run.classList.add("error");
     el_run.textContent = "Stop";
     parse_timer();
-    setInterval(roll, time_unit);
+    timeout_id = setInterval(roll, time_unit);
   }
 });
 
