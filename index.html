@@ -38,10 +38,10 @@ const el_task = document.getElementById("task");
 
 const ring = new Audio("8_whistle_blow_long.mp3");
 const ring2 = new Audio("ring.ogg");
-const time_unit = 1000;
+const time_unit = 2000;
 const minute = 60000 / time_unit;
 
-var timeout_id, tasks, current_wait = 0;
+var timeout_id, tasks, remaining_wait = 0;
 
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
@@ -55,43 +55,45 @@ const add_message = (message) => {
 
 const rest_up = () => {
   ring2.play();
-  timeout_id = setTimeout(roll, time_unit);
-}
+  timeout_id = setInterval(roll, time_unit);
+};
 
-const roll = () => {
+const parse_timer = () => {
   var timer_val = Math.max(parseInt(el_timer.value) || 1, 1);
   el_timer.value = timer_val;
-  timer_val *= minute;
-  if (Math.random() * (timer_val - current_wait) < 1){
+  remaining_wait = timer_val * minute;
+  return timer_val;
+};
+
+const roll = () => {
+  remaining_wait -= 1;
+  if (Math.random() * remaining_wait < 1){
+    clearInterval(timeout_id);
     run();
-    return;
   }
-  current_wait += 1;
-  timeout_id = setTimeout(roll, time_unit);
-}
+};
 
 const run = () => {
-  var timer_val = (parseInt(el_timer.value) || 1);
+  var timer_val = parse_timer();
   const task = tasks[getRandomInt(tasks.length)];
   const task_set_val = parseInt(task.slice(1));
   if (task_set_val){
     if (task.startsWith("=")) timer_val = task_set_val;
     if (task.startsWith("+")) timer_val += task_set_val;
     if (task.startsWith("-")) timer_val -= task_set_val;
-    if (task.startsWith("?")) timer_val = getRandomInt(task_set_val);
+    if (task.startsWith("?")) timer_val = getRandomInt(task_set_val) + 1;
   }
   else if (task.startsWith("?")){
-    timer_val = getRandomInt(timer_val);
+    timer_val = getRandomInt(timer_val - 1) + 1;
   }
-  timer_val = Math.max(timer_val, 1);
   el_timer.value = timer_val;
+  parse_timer();
   ring.play();
   add_message(task);
-  current_wait = 0;
   const rest_time = Math.max(parseInt(el_rest.value) || 0, 0);
   el_rest.value = rest_time;
   if (rest_time > 0) timeout_id = setTimeout(rest_up, rest_time * 1000);
-  else timeout_id = setTimeout(roll, time_unit);
+  else timeout_id = setInterval(roll, time_unit);
 };
 
 el_run.addEventListener("click", () => {
@@ -107,7 +109,7 @@ el_run.addEventListener("click", () => {
     el_tasks.disabled = true;
     el_run.classList.add("error");
     el_run.textContent = "Stop";
-    roll();
+    setInterval(roll, time_unit);
   }
 });
 
