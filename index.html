@@ -9,7 +9,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/picocss/2.1.1/pico.min.css" integrity="sha512-+4kjFgVD0n6H3xt19Ox84B56MoS7srFn60tgdWFuO4hemtjhySKyW4LnftYZn46k3THUEiTTsbVjrHai+0MOFw==" crossorigin="anonymous" referrerpolicy="no-referrer">
   <style>
     :root {
-      --pico-line-height: 1.15;
+      --pico-line-height: 1.1;
+    }
+    input[type="number"]{
+      max-width: 6em;
     }
   </style>
 </head>
@@ -18,11 +21,11 @@
 <main class="container">
   <textarea placeholder="Tasks" id="tasks" rows="8"></textarea>
   <div class="grid">
-    <div><label><input type="number" id="timer" value="20" step="1" min="1" max="900" required />min&nbsp;max</label></div>
-    <div><label><input type="number" id="rest" value="60" step="1" min="0" max="7200" required />sec&nbsp;break</label></div>
+    <div><label><input type="number" id="timer" value="20" step="1" min="1" max="900" required />&nbsp;min&nbsp;max</label></div>
+    <div><label><input type="number" id="rest" value="60" step="1" min="0" max="7200" required />&nbsp;sec&nbsp;break</label></div>
     <div>
       <button id="run">Start</button>
-      <button id="clear" class="success contrast">Clear</button>
+      <button id="clear" class="contrast">Clear</button>
     </div>
   </div>
   <div id="task"></div>
