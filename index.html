@@ -18,8 +18,8 @@
 <main class="container">
   <textarea placeholder="Tasks" id="tasks" rows="8"></textarea>
   <div class="grid">
-    <div><label><input type="number" id="timer" value="20" step="1" min="1" max="999" required />min&nbsp;max</label></div>
-    </div><label><input type="number" id="rest" value="60" step="1" min="1" max="999" required />sec&nbsp;break</label></div>
+    <div><label><input type="number" id="timer" value="20" step="1" min="1" max="900" required />min&nbsp;max</label></div>
+    <div><label><input type="number" id="rest" value="60" step="1" min="0" max="7200" required />sec&nbsp;break</label></div>
     <div>
       <button id="run">Start</button>
       <button id="clear" class="success contrast">Clear</button>
